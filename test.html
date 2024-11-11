@@ -48,12 +48,15 @@ async function fetchNotices() {
         const response = await fetch(url, {
             headers: { 'Accept': 'application/vnd.github.v3+json' }
         });
+        if (!response.ok) throw new Error(`네트워크 응답이 불량합니다. 상태 코드: ${response.status}`);
+
         const data = await response.json();
         const decodedContent = atob(data.content);
         const notices = JSON.parse(decodedContent);
-        displayNotices(notices);
+        return { notices, sha: data.sha };
     } catch (error) {
         console.error('공지사항 데이터를 가져오는 중 오류가 발생했습니다:', error);
+        return { notices: [], sha: null };
     }
 }
 
@@ -86,6 +89,14 @@ document.getElementById('noticeForm').addEventListener('submit', async function 
     const title = document.getElementById('title').value;
     const content = document.getElementById('content').value;
 
+    // 기존 JSON 파일을 가져와서 새 공지사항을 추가한 뒤 GitHub에 업데이트
+    const { notices = [], sha } = await fetchNotices();
+
+    if (!sha) {
+        alert('기존 공지사항 데이터를 가져오는 데 실패했습니다.');
+        return;
+    }
+
     // 새로운 공지사항 추가
     const newNotice = {
         title,
@@ -93,9 +104,6 @@ document.getElementById('noticeForm').addEventListener('submit', async function 
         date: new Date().toISOString().split('T')[0],
         link: "#"
     };
-
-    // 기존 JSON 파일을 가져와서 새 공지사항을 추가한 뒤 GitHub에 업데이트
-    const { notices, sha } = await fetchNotices();
     notices.push(newNotice);
 
     // GitHub에 업데이트할 데이터 설정
@@ -118,7 +126,7 @@ document.getElementById('noticeForm').addEventListener('submit', async function 
         if (updateResponse.ok) {
             alert("공지사항이 성공적으로 추가되었습니다.");
             document.getElementById('noticeForm').reset(); // 폼 초기화
-            fetchNotices(); // 공지사항 목록 새로고침
+            fetchNotices().then(data => displayNotices(data.notices)); // 공지사항 목록 새로고침
         } else {
             console.error("공지사항 업데이트 실패:", updateResponse.status, updateResponse.statusText);
         }
@@ -128,8 +136,9 @@ document.getElementById('noticeForm').addEventListener('submit', async function 
 });
 
 // 초기 공지사항 데이터 로드
-fetchNotices();
+fetchNotices().then(data => displayNotices(data.notices));
 </script>
+
 
 </body>
 </html>
