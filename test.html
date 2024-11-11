@@ -112,6 +112,8 @@ document.getElementById('noticeForm').addEventListener('submit', async function 
         sha = response.headers.get("etag"); // 파일 업데이트 시 필요한 sha 값
     } catch (error) {
         console.error("기존 데이터를 가져오는 중 오류 발생:", error);
+        console.log("Response Status:", response.status);
+        console.log("Response Headers:", response.headers);
         return;
     }
 
