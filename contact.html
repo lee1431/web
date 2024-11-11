@@ -64,49 +64,34 @@
     </div>
   </div>
 </section>
-  <!-- Business Section -->
-  <section class="section ">
+
+<!-- Notice Section -->
+<section id="notice" class="section py-5">
     <div class="container">
-      <div class="business-section">
-        
-        <!-- Left Menu -->
-        <nav class="left-menu">
-          <h3>사업분야</h3>
-          <ul>
-            <li><a href="#">- 소방공사 감리업</a></li>
-			<li><a href="#">- 소방시설 설계업</a></li>			
-			<li><a href="#">- 에너지진단 사업</a></li>
-			<li><a href="#">- ESCO 사업</a></li>
-			<li><a href="#">- 에너지사용계획 사업</a></li>
-			<li><a href="#">- T.A.B커미셔닝 사업</a></li>
-			<li><a href="#">- 소방제연T.A.B 사업</a></li>
-			<li><a href="#">- 기계설비 성능점검 사업</a></li>
-			<li><a href="#">- 터널 제연설비 성능검증 사업</a></li>			
-          </ul>
-        </nav>
-
-    <!-- Right Content -->
-    <div class="right-content">
-      <h3>내일의 풍요로운 미래를 위해 땀 흘려온 기업이 있습니다.</h3>
-	  <hr>
-      <p class="lh-lg">(주)기장엔지니어링은 1998년 창립이래 사람과 자연이 공존하고, 미래에 고갈되어 질 유한한 자원들을 잘 관리하고
-      지혜롭게 사용하는 것이 앞으로 후손들에게 물려주어야 할 사명임을 인식하고 그 일환으로써 에너지 절약사업에 바탕을 두고
-      환경친화적기업으로 지금까지 성장, 발전, 노력하여 왔습니다.</p>
-	  
-	  <p class="lh-lg">
-		 금번 업종의 다양화 및 전문화로서 새로운 도약의 시점을 맞이하여, 각 시설의 성능확보 및 효율성은 물론 화재안전을 뒷받침하여
-		국민의 생명과 안전 지킴을 최우선하는 기업으로 성실과 열정 그리고 다양한 기술력을 바탕으로
-		고객만족을 최우선 정책 추진으로 함께 발전하는 기업이 되도록 노력하겠습니다.
-	  </p>
-	  
-	  <p class="lh-lg">
-		항상 저희(주)기장엔지니어링을 격려해 주심을 감사 드리오며, 더욱 큰 서비스와 노력하는 모습으로 감사에 보답하도록 하겠습니다.
-	  </p>
-	  
+        <h2 class="text-center mb-4">공지사항</h2>
+        <div class="row" id="notice-list">
+            <!-- JSON 데이터를 기반으로 공지사항이 동적으로 여기에 추가됩니다 -->
+        </div>
     </div>
-  </div>
-  </Section>
+</section>
 
+<section id="add-notice" class="section py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">새 공지사항 추가</h2>
+        <form id="noticeForm">
+            <div class="mb-3">
+                <label for="title" class="form-label">제목</label>
+                <input type="text" class="form-control" id="title" required>
+            </div>
+            <div class="mb-3">
+                <label for="content" class="form-label">내용</label>
+                <textarea class="form-control" id="content" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">공지사항 추가</button>
+        </form>
+    </div>
+</section>
+	
 <!-- Footer -->
 <footer class="footer d-flex align-items-center">
 	<div class="footer-logo">
@@ -121,5 +106,115 @@
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+	<!-- JavaScript -->
+<script>
+// 공지사항 데이터를 GitHub에서 가져오기
+async function fetchNotices() {
+    const url = "https://api.github.com/repos/lee1431/web/contents/notices.json";
+
+    try {
+        const response = await fetch(url, {
+            headers: { 'Accept': 'application/vnd.github.v3+json' }
+        });
+        if (!response.ok) throw new Error(`네트워크 응답이 불량합니다. 상태 코드: ${response.status}`);
+
+        const data = await response.json();
+        
+        // Base64로 인코딩된 데이터를 디코딩하면서 UTF-8로 처리
+        const decodedContent = new TextDecoder("utf-8").decode(Uint8Array.from(atob(data.content), c => c.charCodeAt(0)));
+        
+        const notices = JSON.parse(decodedContent);
+        return { notices, sha: data.sha };
+    } catch (error) {
+        console.error('공지사항 데이터를 가져오는 중 오류가 발생했습니다:', error);
+        return { notices: [], sha: null };
+    }
+}
+
+
+// 공지사항 목록을 화면에 표시하기
+function displayNotices(notices) {
+    const noticeList = document.getElementById("notice-list");
+    noticeList.innerHTML = ""; // 기존 목록 초기화
+
+    notices.forEach((notice) => {
+        const noticeItem = document.createElement("div");
+        noticeItem.classList.add("col-md-6", "mb-4");
+        noticeItem.innerHTML = `
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">${notice.title}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">${notice.date}</h6>
+                    <p class="card-text">${notice.content}</p>
+                    ${notice.link ? `<a href="${notice.link}" class="card-link">자세히 보기</a>` : ""}
+                </div>
+            </div>
+        `;
+        noticeList.appendChild(noticeItem);
+    });
+}
+
+// 공지사항 추가 폼 제출 처리
+document.getElementById('noticeForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const title = document.getElementById('title').value;
+    const content = document.getElementById('content').value;
+
+    // 기존 JSON 파일을 가져와서 새 공지사항을 추가한 뒤 GitHub에 업데이트
+    const { notices = [], sha } = await fetchNotices();
+
+    if (!sha) {
+        alert('기존 공지사항 데이터를 가져오는 데 실패했습니다.');
+        return;
+    }
+
+    // 새로운 공지사항 추가
+    const newNotice = {
+        title,
+        content,
+        date: new Date().toISOString().split('T')[0],
+        link: "#"
+    };
+    notices.push(newNotice);
+
+    // GitHub에 업데이트할 데이터 설정
+    const updateData = {
+        message: "공지사항 업데이트",
+        content: btoa(unescape(encodeURIComponent(JSON.stringify(notices, null, 2)))),
+        sha: sha // 기존 파일의 SHA 값을 사용하여 업데이트
+    };
+
+    var v = "ghp_p5qmRzg0";
+    var vv = "emnV7sN0xBZE3H";
+    var vvv = "7k7cLL5g3zeZz0";
+    
+    try {
+        const updateResponse = await fetch("https://api.github.com/repos/lee1431/web/contents/notices.json", {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${v}${vv}${vvv}`, // 실제 GitHub 토큰으로 교체
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updateData)
+        });
+
+        if (updateResponse.ok) {
+            alert("공지사항이 성공적으로 추가되었습니다.");
+            document.getElementById('noticeForm').reset(); // 폼 초기화
+            fetchNotices().then(data => displayNotices(data.notices)); // 공지사항 목록 새로고침
+        } else {
+            console.error("공지사항 업데이트 실패:", updateResponse.status, updateResponse.statusText);
+        }
+    } catch (error) {
+        console.error("공지사항 추가 중 오류 발생:", error);
+    }
+});
+
+// 초기 공지사항 데이터 로드
+fetchNotices().then(data => displayNotices(data.notices));
+</script>
+	
 </body>
 </html>
