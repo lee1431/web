@@ -153,6 +153,8 @@ document.getElementById('noticeForm').addEventListener('submit', async function 
         document.getElementById('noticeForm').reset(); // 폼 초기화
     } catch (error) {
         console.error("공지사항 추가 중 오류 발생:", error);
+        console.log("Response Status:", response.status);
+        console.log("Response Headers:", response.headers);
     }
 });
 
