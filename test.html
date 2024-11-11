@@ -47,22 +47,27 @@ async function fetchNotices() {
     try {
         const response = await fetch(url, {
             headers: {
-                'Accept': 'application/vnd.github.v3.raw' // Raw 데이터 형태로 요청
+                'Accept': 'application/vnd.github.v3+json' // JSON 형식으로 요청
             }
         });
-        if (!response.ok) throw new Error('네트워크 응답이 불량합니다.');
+        if (!response.ok) throw new Error(`네트워크 응답이 불량합니다. 상태 코드: ${response.status}`);
         
         const data = await response.json();
-        return data;
+        
+        // Base64로 인코딩된 데이터를 디코딩
+        const decodedContent = atob(data.content);
+        const notices = JSON.parse(decodedContent); // JSON 파싱
+
+        return { notices, sha: data.sha };
     } catch (error) {
         console.error('공지사항 데이터를 가져오는 중 오류가 발생했습니다.', error);
-        return [];
+        return { notices: [], sha: null };
     }
 }
 
 // 공지사항을 화면에 표시
 async function displayNotices() {
-    const notices = await fetchNotices();
+    const { notices } = await fetchNotices();
     const noticeList = document.querySelector('#notice .row');
 
     notices.forEach(notice => {
@@ -86,7 +91,7 @@ async function displayNotices() {
 // 페이지 로드 시 공지사항 표시
 document.addEventListener('DOMContentLoaded', displayNotices);
 
-
+// 공지사항 추가 폼 제출 처리
 document.getElementById('noticeForm').addEventListener('submit', async function (e) {
     e.preventDefault();
 
@@ -95,29 +100,10 @@ document.getElementById('noticeForm').addEventListener('submit', async function 
     const content = document.getElementById('content').value;
 
     // 기존 JSON 파일 가져오기
-    const fetchUrl = "https://api.github.com/repos/lee1431/web/contents/notices.json";
-    const token = "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"; // Personal Access Token 사용
-
-    // 기존 파일 데이터 가져오기
-    let notices;
-    let sha;
-    try {
-        console.log("Fetching URL:", fetchUrl);
-        console.log("Using Token:", token);
-        
-        const response = await fetch(fetchUrl, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Accept': 'application/vnd.github.v3+json'
-            }
-        });
-
-        notices = await response.json();
-        sha = notices.sha;
-    } catch (error) {
-        console.error("기존 데이터를 가져오는 중 오류 발생:", error);
-        console.log("Response Status:", response.status);
-        console.log("Response Headers:", response.headers);
+    const { notices, sha } = await fetchNotices();
+    
+    if (!sha) {
+        alert('기존 공지사항 데이터를 가져오는 데 실패했습니다.');
         return;
     }
 
@@ -140,7 +126,7 @@ document.getElementById('noticeForm').addEventListener('submit', async function 
 
     // GitHub API로 업데이트 요청 보내기
     try {
-        const updateResponse = await fetch(fetchUrl, {
+        const updateResponse = await fetch("https://api.github.com/repos/lee1431/web/contents/notices.json", {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -150,15 +136,13 @@ document.getElementById('noticeForm').addEventListener('submit', async function 
         });
 
         if (!updateResponse.ok) {
-            throw new Error("GitHub API 요청 실패");
+            throw new Error(`GitHub API 요청 실패, 상태 코드: ${updateResponse.status}`);
         }
 
         alert("공지사항이 성공적으로 추가되었습니다.");
         document.getElementById('noticeForm').reset(); // 폼 초기화
     } catch (error) {
         console.error("공지사항 추가 중 오류 발생:", error);
-        console.log("Response Status:", updateResponse.status);
-        console.log("Response Headers:", updateResponse.headers);
     }
 });
 
@@ -168,9 +152,6 @@ function toBase64(str) {
 }
 
 </script>
-
-
-
 
 </body>
 </html>
