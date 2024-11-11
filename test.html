@@ -135,6 +135,8 @@ document.getElementById('noticeForm').addEventListener('submit', async function 
             body: JSON.stringify(updateData)
         });
 
+        console.log("1111111 - ", updateResponse);
+        
         if (!updateResponse.ok) {
             throw new Error(`GitHub API 요청 실패, 상태 코드: ${updateResponse.status}`);
         }
