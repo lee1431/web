@@ -122,8 +122,9 @@ document.getElementById('noticeForm').addEventListener('submit', async function 
         message: "공지사항 업데이트",
         content: toBase64(JSON.stringify(notices, null, 2)), // Base64로 인코딩된 JSON 데이터
         sha // 기존 파일의 SHA 값을 사용하여 업데이트
-        console.log("22222222 - " , sha);
     };
+
+    console.log("22222222 - " , sha);
 
     // GitHub API로 업데이트 요청 보내기
     try {
