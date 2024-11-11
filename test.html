@@ -117,7 +117,7 @@ document.getElementById('noticeForm').addEventListener('submit', async function 
         const updateResponse = await fetch("https://api.github.com/repos/lee1431/web/contents/notices.json", {
             method: 'PUT',
             headers: {
-                'Authorization': `Bearer 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`, // 실제 GitHub 토큰으로 교체
+                'Authorization': `Bearer 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`, // 실제 GitHub 토큰으로 교체
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(updateData)
