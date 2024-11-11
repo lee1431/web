@@ -129,7 +129,7 @@ document.getElementById('noticeForm').addEventListener('submit', async function 
         const updateResponse = await fetch("https://api.github.com/repos/lee1431/web/contents/notices.json", {
             method: 'PUT',
             headers: {
-                'Authorization': `Bearer ${token}`,
+                'Authorization': `Bearer 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`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(updateData)
