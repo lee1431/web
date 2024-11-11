@@ -51,7 +51,10 @@ async function fetchNotices() {
         if (!response.ok) throw new Error(`네트워크 응답이 불량합니다. 상태 코드: ${response.status}`);
 
         const data = await response.json();
-        const decodedContent = atob(data.content);
+        
+        // Base64로 인코딩된 데이터를 디코딩하면서 UTF-8로 처리
+        const decodedContent = new TextDecoder("utf-8").decode(Uint8Array.from(atob(data.content), c => c.charCodeAt(0)));
+        
         const notices = JSON.parse(decodedContent);
         return { notices, sha: data.sha };
     } catch (error) {
@@ -59,6 +62,7 @@ async function fetchNotices() {
         return { notices: [], sha: null };
     }
 }
+
 
 // 공지사항 목록을 화면에 표시하기
 function displayNotices(notices) {
