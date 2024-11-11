@@ -104,8 +104,8 @@ document.getElementById('noticeForm').addEventListener('submit', async function 
     try {
         const response = await fetch(fetchUrl, {
             headers: {
-                'Authorization': `Bearer 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`,
-                'Accept': 'application/vnd.github.v3.raw'
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/vnd.github.v3+json'
             }
         });
         notices = await response.json();
