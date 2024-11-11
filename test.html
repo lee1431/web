@@ -102,6 +102,9 @@ document.getElementById('noticeForm').addEventListener('submit', async function 
     let notices;
     let sha;
     try {
+        console.log("Fetching URL:", fetchUrl);
+        console.log("Using Token:", token);
+        
         const response = await fetch(fetchUrl, {
             headers: {
                 'Authorization': `Bearer ${token}`,
