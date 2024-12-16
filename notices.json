@@ -72,5 +72,11 @@
     "content": "test",
     "date": "2024-12-16",
     "link": "#"
+  },
+  {
+    "title": "UUID",
+    "content": "TEST",
+    "date": "2024-12-16",
+    "uid": "1a8e4585-f54f-439d-8028-ddcd36b2d9f6"
   }
 ]
