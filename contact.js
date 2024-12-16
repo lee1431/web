@@ -1,5 +1,4 @@
-
-
+/*
 async function fetchData() {
     const url = "https://github.com/lee1431/web/blob/main/notices.json";
 
@@ -90,6 +89,9 @@ async function updatePage(page) {
 
 updatePage(currentPage);
 
+*/
+
+
 async function fetchNotices() {
     const url = "https://api.github.com/repos/lee1431/web/contents/notices.json";
 
@@ -111,6 +113,8 @@ async function fetchNotices() {
         return { notices: [], sha: null };
     }
 }
+
+
 
 // 공지사항 목록을 화면에 표시하기
 function displayNotices(notices) {
