@@ -1,3 +1,4 @@
+/*
 function showContent(sectionId) {
 	var contentSections = document.getElementsByClassName("content-section");
 	for (var i = 0; i < contentSections.length; i++) {
@@ -15,8 +16,8 @@ function showSectionFromURL() {
 		showContent("supervising");
 	}
 }
-
 document.addEventListener("DOMContentLoaded", showSectionFromURL);
+*/
 
 window.onscroll = function() {
       const scrollBtn = document.getElementById("scrollToTopBtn");
