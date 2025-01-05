@@ -1,0 +1,13 @@
+.cropped-main-img {
+/* 가로 폭은 부모 컨테이너 너비에 맞춤(반응형) */
+width: 100%;
+
+/* 최대 높이를 200px로 제한 (그 이상은 잘림) */
+max-height: 300px;
+
+/* 넘치는 부분을 자르려면 object-fit: cover; */
+object-fit: cover;
+
+/* display: block; 또는 inline-block; (원하는 레이아웃에 따라) */
+display: block;
+}
