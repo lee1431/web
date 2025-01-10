@@ -1,8 +1,7 @@
 <template>
+    <TheHeader />
     <div>
         <!-- 헤더 컴포넌트 삽입 -->
-        <TheHeader />
-
         <!-- 메인 컨텐츠: 상단 섹션 -->
         <section id="about">
             <div class="container position-relative">
@@ -63,16 +62,9 @@
                 </div>
             </div>
         </section>
-
-        <!-- 푸터 컴포넌트 삽입 -->
-        <TheFooter />
     </div>
+    <TheFooter />
 </template>
-
-<script setup>
-import TheHeader from '~/components/TheHeader.vue'
-import TheFooter from '~/components/TheFooter.vue'
-</script>
 
 <style scoped>
 /* 기존 main.css에서 필요한 부분만 선택적으로 가져오거나, 전역 CSS에 적용해주세요. */

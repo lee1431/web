@@ -1,7 +1,6 @@
 <template>
+  <TheHeader />
   <div>
-    <TheHeader />
-    <!-- 상단 헤더 이미지/텍스트 -->
     <!-- 메인 컨텐츠: 상단 섹션 -->
     <section id="about">
       <div class="container position-relative">
@@ -117,9 +116,8 @@
         </div>
       </div>
     </section>
-
-    <TheFooter />
   </div>
+  <TheFooter />
 </template>
 
 <script setup>

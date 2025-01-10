@@ -1,7 +1,7 @@
 <!-- pages/about.vue -->
 <template>
+    <TheHeader />
     <div>
-        <TheHeader />
         <!-- 메인 컨텐츠: 상단 섹션 -->
         <section id="about">
             <div class="container position-relative">
@@ -241,13 +241,12 @@
             </div>
         </section>
 
-        <TheFooter />
-
         <!-- 맨 위로 이동 버튼 -->
         <button id="scrollToTopBtn" class="btn btn-light border">
             <i class="bi bi-arrow-up"></i>
         </button>
     </div>
+    <TheFooter />
 </template>
 
 <script setup>
