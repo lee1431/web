@@ -7,14 +7,15 @@ export default defineEventHandler(async (event) => {
     const GITHUB_REPO = process.env.GITHUB_REPO;
     const GITHUB_FILE_PATH = process.env.GITHUB_FILE_PATH;
     const GITHUB_API_URL = `https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE_PATH}`;
-    const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+    const GITHUB_TOKEN_1 = process.env.GITHUB_TOKEN_1;
+    const GITHUB_TOKEN_2 = process.env.GITHUB_TOKEN_2;
     const { method } = event.req;
 
     if (method === 'GET') {
         // 공지사항 가져오기
         try {
             const response = await fetch(GITHUB_API_URL, {
-                headers: { Authorization: `Bearer ${GITHUB_TOKEN}` },
+                headers: { Authorization: `Bearer ${GITHUB_TOKEN_1}${GITHUB_TOKEN_2}` },
             });
 
             if (!response.ok) {
@@ -43,7 +44,7 @@ export default defineEventHandler(async (event) => {
             const response = await fetch(GITHUB_API_URL, {
                 method: 'PUT',
                 headers: {
-                    Authorization: `Bearer ${GITHUB_TOKEN}`,
+                    Authorization: `Bearer ${GITHUB_TOKEN_1}${GITHUB_TOKEN_2}`,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(updateData),
